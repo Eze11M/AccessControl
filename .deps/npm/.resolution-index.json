@@ -1,0 +1,10 @@
+{
+  "contracts/AccessControl.sol": {
+    "__sources__": {
+      "contracts/AccessControl.sol": {
+        "content": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.19;\r\n\r\ncontract AccessControl {\r\n    \r\n}",
+        "file": "contracts/AccessControl.sol"
+      }
+    }
+  }
+}
