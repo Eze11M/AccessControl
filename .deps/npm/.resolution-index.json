@@ -2,7 +2,7 @@
   "contracts/AccessControl.sol": {
     "__sources__": {
       "contracts/AccessControl.sol": {
-        "content": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.19;\r\n\r\ncontract AccessControl {\r\n    \r\n}",
+        "content": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.19;\r\n\r\ncontract AccessControl {\r\n    // roles => account => bool\r\n    mapping(bytes32 => mapping(address => bool)) public roles;\r\n\r\n    bytes32 private constant ADMIN = keccak256(abi.encodePacked(\"ADMIN\"));\r\n    bytes32 private constant USER = keccak256(abi.encodePacked(\"USER\"));\r\n\r\n    event GrantRole(bytes32 indexed role, address indexed account);\r\n    event RevokeRole(bytes32 indexed role, address indexed account);\r\n\r\n    modifier onlyRole(bytes32 _role) {\r\n        require(roles[_role][msg.sender], \"forbidden\");\r\n        _;\r\n    }\r\n\r\n    constructor() {\r\n        _grantRole(ADMIN, msg.sender);\r\n    }\r\n\r\n    function _grantRole(bytes32 _role, address _account) internal {\r\n        roles[_role][_account] = true;\r\n\r\n        emit GrantRole(_role, _account);\r\n    }\r\n\r\n    function grantRole(bytes32 _role, address _account) external onlyRole(ADMIN) {\r\n        _grantRole(_role, _account);\r\n    }\r\n\r\n    function revokeRole(bytes32 _role, address _account) external onlyRole(ADMIN) {\r\n        roles[_role][_account] = false;\r\n\r\n        emit RevokeRole(_role, _account);\r\n    }\r\n\r\n    function getAdminRole() external pure returns (bytes32) {\r\n        return ADMIN;\r\n    }\r\n\r\n    function getUserRole() external pure returns (bytes32) {\r\n        return USER;\r\n    }\r\n}",
         "file": "contracts/AccessControl.sol"
       }
     }

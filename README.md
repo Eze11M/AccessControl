@@ -1,50 +1,23 @@
-# Remix IDE Blank Template
+# Access Control simple solidity contract
 
-Welcome to your new **Remix IDE Blank Workspace**!
+This repo features a simple solidity contract that lets assign and manage different roles with different authorization levels.
 
-This workspace has been generated using the "Blank Template" option in Remix IDE. It starts with only minimal configuration files, giving you full control to build your project from scratch.
+## This contract features:
 
----
+   1. A public mapping(bytes32 => mapping(address => bool)) "roles" state variable that stores a hashmap from the role to the accounts, and from the accounts to its assignation.
+   2. A private bytes32 constant "ADMIN" and "USER" state values that stores the keccak256 that identifies the role on bytes32 fixed length.
+   3. A "onlyRole(bytes32)" modifier that checks if the sender has the provided necessary authorization level to call the function.
+   4. A contructor() that sets as "ADMIN" role the contract deployer using "_grantRole(bytes32, address)" function.
+   5. An internal "_grantRole(bytes32, address)" function that assigns the given role to the given account.
+   6. An external "grantRole(bytes32, address)" function that wraps "_granRole(bytes32, address)" to be used in pair of "onlyRole(bytes32)" modifier.
+   7. An external "revokeRole(bytes32, address)" function that unassigns the given role to the given account, utilizing "onlyRole(bytes32)" modifier.
+   8. Two external pure "getAdminRole()" and "getUserRole()" functions returning bytes32 role keccak256 that serve as test helpers for the contract.
+   9. A customized event handling for granting and revoking roles.
 
-## What's Included?
+## Advise:
 
-- **`remix.config.json`**: Default Remix IDE workspace configuration.
-- **`.prettierrc.json`**: Basic Prettier formatting rules for code consistency.
+The mapping `roles[_role][_account]` should be read as "from this role for the account X its granted".
 
-No contract files, folders, or sample code are included.
+We use keccak256 to encode roles so we ensure the length of the role identifier is always the same no matter what length the seed identifier string was.
 
----
-
-## Getting Started
-
-1. **Create Files & Folders**
-
-   - Add new Solidity files, scripts, or folders as needed for your project.
-   - You can organize your workspace structure in any way you like.
-
-2. **Setup Project Settings** (Optional)
-
-   - Modify `remix.config.json` or add additional configuration files as your project grows.
-
-3. **Write & Compile Smart Contracts**
-
-   - Use the **Solidity Compiler** and **Deploy & Run Transactions** plugins (available in Remix IDE's left sidebar) to develop and test your contracts.
-
-4. **(Optional) Initialize Git**
-
-   - If you checked "Initialize as a Git repository" during workspace creation, you can start committing your code immediately.
-
----
-
-## Useful Resources
-
-- [Remix IDE Documentation](https://remix-ide.readthedocs.io/)
-- [Solidity Language Documentation](https://docs.soliditylang.org/)
-- [Remix IDE Community Forum](https://forum.remix.ethereum.org/)
-
----
-
-Happy coding! 🚀 
-
-_Remix IDE Team_
-
+The functions "getAdminRole()" and "getUserRole()" are intended for testing, and are pure because "ADMIN" and "USER" state values are constant; meaning its values are compiled into the contract code itself, so checking them does not require to lookup on a blockchain slot.
